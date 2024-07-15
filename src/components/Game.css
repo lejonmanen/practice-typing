@@ -1,0 +1,73 @@
+.game {
+	.phrase {
+		background: #CDD7E1;
+		padding: 0.2em;
+		border-radius: 0.2em;
+		margin-bottom: 0.25em;
+		text-align: center;
+	}
+}
+
+.typer {
+	text-align: center;
+	position: relative;
+	font-family: Consolas;
+	/* font-size: 150%; */
+	margin: 0.25em 0;
+	padding: 0.25em;
+	background: #DDE7EE;
+	border: 0.2em solid none;
+	border-radius: 0.25em;
+	min-height: 2.8em;
+
+	.letter {
+		margin: 0.05em 0.05em;
+		border-radius: 0em;
+		min-height: 1.5em;
+		min-width: 1.22em;  /* chip won't display space */
+
+		&.correct {
+			background: #A1E8A1;
+		}
+		&.wrong {
+			background: #F09898;
+		}
+		&.warning {
+			background: #FCE1C2;
+		}
+
+	}
+}
+.typer:not(:focus) {
+	padding: 0.05em;
+	border: 3px dashed #E47474;
+	min-height: 2.5em;
+}
+/* .typer:not(:focus)::after {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	content: 'Focus lost! Please click here to continue typing.';
+
+	border-radius: 0.25em;
+	background-color: rgb(234, 196, 195);
+	padding: 0.5em;
+	cursor: pointer;
+} */
+
+
+.history {
+	th {
+		font-weight: bold;
+	}
+
+	tr:nth-child(odd) td {
+		background: rgb(221, 231, 238);
+	}
+
+	td:not(:first-child) {
+		font-family: Consolas;
+	}
+}
