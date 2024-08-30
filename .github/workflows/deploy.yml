@@ -2,7 +2,7 @@ name: Build and deploy to GitHub Pages
 
 on:
   push:
-    branches: [ deploy-to-gh-pages ]
+    branches: [ main ]
 
 permissions:
   pages: write
