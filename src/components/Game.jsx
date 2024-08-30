@@ -164,11 +164,6 @@ const Game = () => {
 						<Typography> Warning: this will reset history. Make a screenshot if you want to save it! </Typography>
 					</Sheet>
 				)}
-
-				{/* <Stack direction="row">
-				<Button variant="outlined"> Start over </Button>
-				<Button variant="outlined"> Another </Button>
-				</Stack> */}
 			</Stack>
 
 			{/* <p> The phrase is: {phrase} </p> */}
