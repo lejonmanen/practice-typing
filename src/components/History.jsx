@@ -1,11 +1,14 @@
-import { Sheet, Stack, Table } from "@mui/joy"
+import { Sheet, Stack, Table, Typography } from "@mui/joy"
 
 
 // {id, phrase, time, errors, score}
-const WordHistory = ({ history  }) => (
+const WordHistory = ({ history  }) => {
+	const [total, average, totalTime] = calc(history)
+	return (
 	history.length < 1
 	? null
-	: <Table className="history" aria-label="word history table" stripe="even" hoverRow>
+	: (<Stack>
+	<Table className="history" aria-label="word history table" stripe="even" hoverRow>
 		<thead>
 			<tr>
 				<th> Phrase </th>
@@ -23,10 +26,25 @@ const WordHistory = ({ history  }) => (
 			))}
 		</thead>
 	</Table>
+	<Typography> Total time: {totalTime} seconds </Typography>
+	<Typography> Total score: {total} points </Typography>
+	<Typography> Average score: {average} points </Typography>
+	</Stack>)
 )
+}
 function format(n) {
 	return Math.round(n * 10) / 10
 }
 //  style={{ fontWeight: 'bold', color: 'red' }}
+function calc(data) {
+	if( !data ) return [0, 0, 0]
+	let total=0, average=0, totalTime=0
+	data.forEach(h => {
+		totalTime += +h.time
+		total += +h.score
+	})
+	average = total / data.length
+	return [format(total), format(average), format(totalTime)]
+}
 
 export default WordHistory

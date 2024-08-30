@@ -6,6 +6,14 @@
 		margin-bottom: 0.25em;
 		text-align: center;
 	}
+
+	.select-word-set {
+		margin-top: 0.25em;
+
+		button {
+			margin-right: 0.25em;
+		}
+	}
 }
 
 .typer {
@@ -21,7 +29,7 @@
 	min-height: 2.8em;
 
 	.letter {
-		margin: 0.05em 0.05em;
+		/* margin: 0.05em 0.05em; */
 		border-radius: 0em;
 		min-height: 1.5em;
 		min-width: 1.22em;  /* chip won't display space */

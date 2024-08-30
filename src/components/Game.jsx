@@ -19,6 +19,7 @@ function formatDiff(from, to) {
 	return diff
 }
 const Game = () => {
+	const [selectedWordButton, setSelectedWB] = useState(1)
 	const [phrases, setPhrases] = useState(getPhrases())
 	const [pi, setPi] = useState(0)
 	const [state, setState] = useState('initial')
@@ -28,6 +29,7 @@ const Game = () => {
 	const [message, setMessage] = useState('')
 	const [wordTime, setWordTime] = useState(0)
 	const [wordTimeStart, setWordTimeStart] = useState(0)
+	const [timeoutId, setTimeoutId] = useState(0)  // showMessage
 	const sheetRef = useRef(null)
 	const timerRef = useRef(null)
 	const stoptimerRef = useRef(false)
@@ -36,10 +38,13 @@ const Game = () => {
 
 	const showMessage = msg => {
 		setMessage(msg)
-		setTimeout(() => setMessage(''), 1500)
+		if( timeoutId ) clearTimeout(timeoutId)
+		setTimeoutId( setTimeout(() => setMessage(''), 1500) )
 	}
+
 	const selectStart = () => {
 		setState('playing')
+		setPi(0)
 		setTimeout(() => sheetRef.current.focus(), 200)
 		doStart()
 	}
@@ -75,13 +80,16 @@ const Game = () => {
 		setErrorCount(0)
 		if( pi + 1 >= phrases.length ) {
 			showMessage('You did all the words! Well done!!')
+			console.log('Game: You did all the words')
 			return
 		}
 		doStart()
 	}
 
+	// Player types a key
 	const handleKeyDown = e => {
 		let ec = errorCount
+		if( !phrase ) return
 		if( isMetaCharacter(e.key) ) return
 		if( e.key === 'Backspace' ) {
 			setTyped(typed.slice(0, typed.length - 1))
@@ -98,15 +106,35 @@ const Game = () => {
 			whenDone(ec)
 		}
 	}
+	const handleButton0 = () => {
+		setSelectedWB(0)
+		showMessage('Selected popular words')
+		setPhrases(getPopular())
+	}
+	const handleButton1 = () => {
+		setSelectedWB(1)
+		showMessage('Selected programming words')
+		setPhrases(getPhrases())
+	}
+	const resetRound = () => {
+		setState('initial')
+		setHistory([])
+	}
+
+	const roundIsDone = pi >= phrases?.length
+	// console.log('pi', pi, phrases?.length)
+
 	return (
 		<Sheet className="game">
 			{state==='initial' && <Stack>
 				<Typography> Are you ready? </Typography>
 				<Button onClick={selectStart}> Start typing! </Button>
 
-				<Stack direction="row">
-					<Button variant="outlined" onClick={() => setPhrases(getPopular())}> Popular words </Button>
-					<Button variant="outlined" onClick={() => setPhrases(getPhrases())}> Programming </Button>
+				<Stack className="select-word-set" direction="row">
+					<Button variant={selectedWordButton === 0 ? 'solid' : 'outlined'}
+						onClick={handleButton0}> Popular words </Button>
+					<Button variant={selectedWordButton === 1 ? 'solid' : 'outlined'}
+						onClick={handleButton1}> Programming </Button>
 				</Stack>
 			</Stack>}
 
@@ -127,7 +155,15 @@ const Game = () => {
 					))}
 				</Sheet>
 
-				{state==='playing' && <p> {formatDiff(wordTimeStart, wordTime)} seconds. </p>}
+				{state==='playing' && !roundIsDone && <p> {formatDiff(wordTimeStart, wordTime)} seconds. </p>}
+
+				{roundIsDone && (
+					<Sheet>
+						<Typography> Round finished. Go again? </Typography>
+						<Button onClick={resetRound}> Select new words </Button>
+						<Typography> Warning: this will reset history. Make a screenshot if you want to save it! </Typography>
+					</Sheet>
+				)}
 
 				{/* <Stack direction="row">
 				<Button variant="outlined"> Start over </Button>
