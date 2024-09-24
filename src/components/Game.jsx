@@ -1,6 +1,6 @@
 import { Alert, Button, Chip, LinearProgress, Sheet, Stack, Typography } from "@mui/joy"
-import { useState, useRef } from "react"
-import { getPhrases, getPopular, shuffle } from "../data/phrases"
+import { useState, useRef, Fragment } from "react"
+import { getPhrases, getPhrasesHtml, getPopular, shuffle } from "../data/phrases"
 // import Timer from "./Timer.jsx"
 import './Game.css'
 import { assessKey, isMetaCharacter } from "./gameUtils.js"
@@ -94,6 +94,7 @@ const Game = () => {
 		if( e.key === 'Backspace' ) {
 			setTyped(typed.slice(0, typed.length - 1))
 		} else {
+			e.preventDefault()
 			const i = typed.length
 			const s = assessKey(phrase[i], e.key)
 			// console.log('Game.handleKeyDown, assessed: ' + s)
@@ -116,25 +117,33 @@ const Game = () => {
 		showMessage('Selected programming words')
 		setPhrases(getPhrases())
 	}
+	const handleButton2 = () => {
+		setSelectedWB(2)
+		showMessage('Selected HTML+CSS words')
+		setPhrases(getPhrasesHtml())
+	}
 	const resetRound = () => {
 		setState('initial')
 		setHistory([])
 	}
 
+	const count = phrases?.length || 0
 	const roundIsDone = pi >= phrases?.length
 	// console.log('pi', pi, phrases?.length)
 
 	return (
 		<Sheet className="game">
 			{state==='initial' && <Stack>
-				<Typography> Are you ready? </Typography>
+				<Typography> Are you ready? ({count} phrases) </Typography>
 				<Button onClick={selectStart}> Start typing! </Button>
 
 				<Stack className="select-word-set" direction="row">
 					<Button variant={selectedWordButton === 0 ? 'solid' : 'outlined'}
 						onClick={handleButton0}> Popular words </Button>
 					<Button variant={selectedWordButton === 1 ? 'solid' : 'outlined'}
-						onClick={handleButton1}> Programming </Button>
+						onClick={handleButton1}> JavaScript </Button>
+					<Button variant={selectedWordButton === 2 ? 'solid' : 'outlined'}
+						onClick={handleButton2}> HTML & CSS </Button>
 				</Stack>
 			</Stack>}
 
@@ -142,7 +151,12 @@ const Game = () => {
 
 				<LinearProgress determinate value={100 * pi / phrases.length} />
 
-				<Typography> Type the phrase exactly as written, as fast as possible. </Typography>
+				{pi+1 <= count && (
+					<Fragment>
+					<Typography> Phrase {pi+1} of {count}. </Typography>
+					<Typography> Type the phrase exactly as written, as fast as possible. </Typography>
+					</Fragment>
+				)}
 				<code className="phrase" style={{ fontSize: '125%' }}>{phrase}</code>
 
 				<Sheet className="typer" ref={sheetRef} tabIndex="0"

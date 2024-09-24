@@ -1,6 +1,6 @@
 import { words } from "popular-english-words"
 
-const wordAmount = 4
+const wordAmount = 5
 
 const basic = [
 	'let x = 1',
@@ -57,6 +57,17 @@ function getPopular() {
 	let ws = words.getMostPopular(200).filter(w => w.length > 4)
 	return shuffle( ws ).slice(0, wordAmount)  // 8 words
 }
+function getPhrasesHtml() {
+	return shuffle([
+		'<div class="container"> Content </div>',
+		'background-color: #3377bb;',
+		'.container > :nth-child(even) {}',
+		'<nav> <a href="#top"> Till toppen </a> </nav>',
+		'grid-template-columns: 1fr 2fr;',
+		'display: flex; flex-direction: column;',
+		'border: 1px solid #a0a0a0;'
+	]).slice(0, wordAmount)
+}
 
 function shuffle(array) {
 	// https://dev.to/codebubb/how-to-shuffle-an-array-in-javascript-2ikj
@@ -70,4 +81,4 @@ function shuffle(array) {
 	return array
 }
 
-export { getPhrases, shuffle, getPopular }
+export { getPhrases, shuffle, getPopular, getPhrasesHtml }
